@@ -1,6 +1,7 @@
 package com.cms.backend.SummaryModel;
 
 import java.util.Date;
+import java.util.Set;
 
 import com.cms.backend.util.Status;
 
@@ -17,5 +18,7 @@ public class SolicitationSummaryModel {
     private String name;
     private Date date;
     private Status status;
+    private LocationSummaryModel location;
+    private Set<ProblemSummaryModel> problems; 
 
 }

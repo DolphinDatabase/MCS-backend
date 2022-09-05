@@ -3,6 +3,7 @@ package com.cms.backend.entity;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -48,6 +50,10 @@ public class Solicitation {
     @Enumerated(EnumType.STRING)
     @Column(name = "chd_status")
     private Status status;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "loc_id", referencedColumnName = "id")
+    private Location location;
 
     @ManyToMany
     @JoinTable(name = "Chamado_Problema",
