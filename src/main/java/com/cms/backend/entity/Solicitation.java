@@ -42,6 +42,9 @@ public class Solicitation {
     @Column(name = "chd_nome")
     private String name;
 
+    @Column(name = "chd_descricao")
+    private String description;
+
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "chd_data")
@@ -52,7 +55,7 @@ public class Solicitation {
     private Status status;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "loc_id", referencedColumnName = "id")
+    @JoinColumn(name = "loc_id", referencedColumnName = "loc_id")
     private Location location;
 
     @ManyToMany

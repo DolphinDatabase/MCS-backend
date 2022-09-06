@@ -42,7 +42,9 @@ public class Location {
     @Column(name = "loc_uf")
     private String uf;
 
-    @OneToOne(mappedBy = "location")
-    private User user;
+    @Column(name = "loc_num")
+    private Long num;
 
+    @OneToOne(mappedBy = "location")
+    private Solicitation solicitation;
 }
