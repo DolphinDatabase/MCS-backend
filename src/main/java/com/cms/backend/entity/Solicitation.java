@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
@@ -57,6 +58,10 @@ public class Solicitation {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "loc_id", referencedColumnName = "loc_id")
     private Location location;
+
+    @ManyToOne
+    @JoinColumn(name = "usr_id", nullable = false)
+    private User user;
 
     @ManyToMany
     @JoinTable(name = "Chamado_Problema",
