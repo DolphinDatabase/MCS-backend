@@ -104,6 +104,9 @@ public class ProblemService {
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
             Problem p = pRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+            p.getSolicitations().forEach(s->{
+                s.getProblems().remove(p);
+            });
             pRepository.delete(p);
             res.setAll(200, true, "Problem "+id+" Deleted",null);
             logger.info(res.getMessage());

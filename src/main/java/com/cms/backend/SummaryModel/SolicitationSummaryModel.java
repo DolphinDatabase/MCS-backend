@@ -19,6 +19,7 @@ public class SolicitationSummaryModel {
     private Date date;
     private Status status;
     private LocationSummaryModel location;
+    private UserSummaryModel user;
     private Set<ProblemSummaryModel> problems; 
 
 }
