@@ -28,7 +28,7 @@ public class RoleService {
     @Autowired
     private ModelMapper modelMapper;
 
-    Logger logger = LoggerFactory.getLogger(UserService.class);
+    Logger logger = LoggerFactory.getLogger(RoleService.class);
 
     @GetMapping
     public ResponseEntity<ResponseSummaryModel> listRoles(){

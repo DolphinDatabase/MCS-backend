@@ -2,6 +2,7 @@ package com.cms.backend.entity;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,7 +34,7 @@ public class Problem {
     @Column(name = "prb_descricao")
     private String description;
 
-    @OneToMany(mappedBy = "problem")
+    @OneToMany(mappedBy = "problem", cascade = CascadeType.REMOVE)
     private Set<Solution> solutions;
 
     @ManyToMany(mappedBy = "problems")
