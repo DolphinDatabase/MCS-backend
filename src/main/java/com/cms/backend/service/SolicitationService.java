@@ -1,7 +1,9 @@
 package com.cms.backend.service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -9,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +28,10 @@ import com.cms.backend.entity.Location;
 import com.cms.backend.entity.Problem;
 import com.cms.backend.entity.Solicitation;
 import com.cms.backend.repository.SolicitationRepository;
+
 import com.cms.backend.repository.LocationRepository;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/solicitation")
 public class SolicitationService {
@@ -120,6 +125,21 @@ public class SolicitationService {
             res.setAll(404, false, "Solicitation "+id+" Not Found", null);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+        }catch(Exception err){
+            res.setAll(500, false, err.getMessage(), null);
+            logger.error(res.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponseSummaryModel> listSolicitation(){
+        ResponseSummaryModel res = new ResponseSummaryModel();
+        try{
+            List<SolicitationSummaryModel> all = sRepository.findAll().stream().map(this::toSolicitationSummaryModel).collect(Collectors.toList());
+            res.setAll(200, true, "List all Solicitations", all);
+            logger.info(res.getMessage());
+            return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(Exception err){
             res.setAll(500, false, err.getMessage(), null);
             logger.error(res.getMessage());
