@@ -5,12 +5,16 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.cms.backend.util.Nivel;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,8 +35,9 @@ public class Problem {
     @Column(name = "prb_nome")
     private String name;
 
-    @Column(name = "prb_descricao")
-    private String description;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "prb_nvl")
+    private Nivel nivel;
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.REMOVE)
     private Set<Solution> solutions;

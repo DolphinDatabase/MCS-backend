@@ -13,6 +13,6 @@ public class ProblemSummaryModel {
 
     private Long id;
     private String name;
-    private String description;
+    private String nivel;
     private Set<SolutionSummaryModel> solutions;
 }

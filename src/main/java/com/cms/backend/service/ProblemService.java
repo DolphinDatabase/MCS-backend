@@ -1,7 +1,9 @@
 package com.cms.backend.service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -59,6 +61,21 @@ public class ProblemService {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<ResponseSummaryModel> listProblem(){
+        ResponseSummaryModel res = new ResponseSummaryModel();
+        try{
+            List<ProblemSummaryModel> all = pRepository.findAll().stream().map(this::toProblemSummaryModel).collect(Collectors.toList());
+            res.setAll(200, true, "List All Problems", all);
+            logger.info(res.getMessage());
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+        }catch(Exception err){
+            res.setAll(500, false, err.getMessage(), null);
+            logger.error(res.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ResponseSummaryModel> findProblem(@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
@@ -84,7 +101,7 @@ public class ProblemService {
         try{
             Problem p = pRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
             p.setName(problem.getName());
-            p.setDescription(problem.getDescription());
+            p.setNivel(problem.getNivel());
             addSolutions(p, problem.getSolutions());
             res.setAll(200, true, "Problem "+id+" Updated", toProblemSummaryModel(pRepository.save(p)));
             logger.info(res.getMessage());

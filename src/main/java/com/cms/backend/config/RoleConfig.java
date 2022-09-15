@@ -25,20 +25,14 @@ public class RoleConfig {
         repository.save(adm);
         logger.info("Role ADM created");
 
-        Role financeiro = new Role();
-        financeiro.setId(Long.valueOf(2));
-        financeiro.setNivel("ROLE_FNC");
-        repository.save(financeiro);
-        logger.info("Role FNC created");
-
         Role suporte = new Role();
-        suporte.setId(Long.valueOf(3));
+        suporte.setId(Long.valueOf(2));
         suporte.setNivel("ROLE_SUP");
         repository.save(suporte);
         logger.info("Role SUP created");
 
         Role cliente = new Role();
-        cliente.setId(Long.valueOf(4));
+        cliente.setId(Long.valueOf(3));
         cliente.setNivel("ROLE_CLT");
         repository.save(cliente);
         logger.info("Role CLT created");
