@@ -16,6 +16,7 @@ public class SolicitationSummaryModel {
     
     private Long id;
     private String name;
+    private String description;
     private Date date;
     private Status status;
     private LocationSummaryModel location;
