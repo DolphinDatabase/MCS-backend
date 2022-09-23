@@ -59,6 +59,10 @@ public class Solicitation {
     @JoinColumn(name = "loc_id", referencedColumnName = "loc_id")
     private Location location;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "orc_id", referencedColumnName = "orc_id")
+    private Budget budget;
+
     @ManyToOne
     @JoinColumn(name = "usr_id", nullable = false)
     private User user;
