@@ -1,4 +1,4 @@
-package main.java.com.cms.backend.repository;
+package com.cms.backend.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,4 +1,4 @@
-package main.java.com.cms.backend.SummaryModel;
+package com.cms.backend.SummaryModel;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
