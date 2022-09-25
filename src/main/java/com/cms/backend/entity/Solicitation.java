@@ -71,7 +71,13 @@ public class Solicitation {
     @JoinTable(name = "Chamado_Problema",
     joinColumns = @JoinColumn(name = "chd_id"),
     inverseJoinColumns = @JoinColumn(name = "prb_id"))
-    private Set<Problem> problems;    
+    private Set<Problem> problems;
+    
+    @ManyToMany
+    @JoinTable(name = "Chamado_Estoque",
+    joinColumns = @JoinColumn(name = "chd_id"),
+    inverseJoinColumns = @JoinColumn(name = "est_nserie"))
+    private Set<Material> materials;
 
     @PrePersist
     public void OnCreate(){
