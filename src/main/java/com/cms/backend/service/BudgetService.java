@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,7 +74,7 @@ public class BudgetService {
             Budget b = bRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
             b.setDescription(budget.getDescription());
             b.setTotal(budget.getTotal());
-            res.setAll(200, true, "Budget " +b.getId()+"Updated", toBudgetSummaryModel(bRepository.save(b)));
+            res.setAll(200, true, "Budget " +b.getId()+" Updated", toBudgetSummaryModel(bRepository.save(b)));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(ResponseStatusException err){
@@ -81,6 +82,26 @@ public class BudgetService {
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         
+        } catch (Exception err) {
+            res.setAll(500, false, err.getMessage(), null);
+            logger.error(res.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseSummaryModel> deleteBudget(@PathVariable Long id){
+        ResponseSummaryModel res = new ResponseSummaryModel();
+        try {
+            Budget budget = bRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            bRepository.delete(budget);
+            res.setAll(200, true, "Budget "+budget.getId()+" Deleted", null);
+            logger.info(res.getMessage());
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+        }catch(ResponseStatusException err){
+            res.setAll(404, false, "Budget "+id+" Not Found", null);
+            logger.info(res.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);        
         } catch (Exception err) {
             res.setAll(500, false, err.getMessage(), null);
             logger.error(res.getMessage());
