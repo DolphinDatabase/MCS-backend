@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
@@ -67,11 +68,8 @@ public class Solicitation {
     @JoinColumn(name = "usr_id", nullable = false)
     private User user;
 
-    @ManyToMany
-    @JoinTable(name = "Chamado_Problema",
-    joinColumns = @JoinColumn(name = "chd_id"),
-    inverseJoinColumns = @JoinColumn(name = "prb_id"))
-    private Set<Problem> problems;
+    @OneToMany(mappedBy = "solicitation")
+    private Set<SolicitationProblem> problems;
     
     @ManyToMany
     @JoinTable(name = "Chamado_Estoque",

@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -28,6 +27,7 @@ import com.cms.backend.SummaryModel.ResponseSummaryModel;
 import com.cms.backend.entity.Problem;
 import com.cms.backend.entity.Solution;
 import com.cms.backend.repository.ProblemRepository;
+import com.cms.backend.repository.SolicitationProblemRepository;
 import com.cms.backend.repository.SolutionRepository;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -40,6 +40,9 @@ public class ProblemService {
 
     @Autowired
     private SolutionRepository sRepository;
+
+    @Autowired
+    private SolicitationProblemRepository spRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -125,7 +128,8 @@ public class ProblemService {
         try{
             Problem p = pRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
             p.getSolicitations().forEach(s->{
-                s.getProblems().remove(p);
+                s.setProblem(null);
+                spRepository.delete(s);
             });
             pRepository.delete(p);
             res.setAll(200, true, "Problem "+id+" Deleted",null);

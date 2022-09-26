@@ -26,6 +26,8 @@ import com.cms.backend.SummaryModel.ResponseSummaryModel;
 import com.cms.backend.SummaryModel.SolicitationSummaryModel;
 import com.cms.backend.entity.Location;
 import com.cms.backend.entity.Problem;
+import com.cms.backend.entity.Budget;
+import com.cms.backend.entity.Material;
 import com.cms.backend.entity.Solicitation;
 import com.cms.backend.repository.SolicitationRepository;
 
@@ -86,20 +88,20 @@ public class SolicitationService {
         }
     }
 
-    @PutMapping("/{id}/addProblem")
-    public ResponseEntity<ResponseSummaryModel> addProblem(@RequestBody Problem problem,@PathVariable Long id){
+    @PutMapping("/{id}/addMaterial")
+    public ResponseEntity<ResponseSummaryModel> addMaterial(@RequestBody Material material,@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
             Solicitation solicitation = sRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
-            Set<Problem> nProblems = new HashSet<>();
-            if(solicitation.getProblems() != null || solicitation.getProblems().size()>0){
-                solicitation.getProblems().forEach(p->{
-                    nProblems.add(p);
+            Set<Material> nMaterials = new HashSet<>();
+            if(solicitation.getMaterials() != null || solicitation.getMaterials().size()>0){
+                solicitation.getMaterials().forEach(m->{
+                    nMaterials.add(m);
                 });
             }
-            nProblems.add(problem);
-            solicitation.setProblems(nProblems);
-            res.setAll(200, true, "Problem "+problem.getId()+" Added to Solicitation "+solicitation.getId(), toSolicitationSummaryModel(sRepository.save(solicitation)));
+            nMaterials.add(material);
+            solicitation.setMaterials(nMaterials);
+            res.setAll(200, true, "Problem "+material.getNum()+" Added to Solicitation "+solicitation.getId(), toSolicitationSummaryModel(sRepository.save(solicitation)));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(ResponseStatusException err){

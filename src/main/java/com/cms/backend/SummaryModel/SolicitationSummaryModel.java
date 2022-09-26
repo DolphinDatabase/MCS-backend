@@ -21,7 +21,7 @@ public class SolicitationSummaryModel {
     private Status status;
     private LocationSummaryModel location;
     private UserSummaryModel user;
-    private Set<ProblemSummaryModel> problems; 
+    private Set<SolicitationProblemSummaryModel> problems; 
     private Set<MaterialSummaryModel> materials; 
 
 }
