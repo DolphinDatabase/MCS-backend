@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.OneToOne;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,5 +29,8 @@ public class Budget {
 
     @Column(name = "orc_total")
     private Double total;
+
+    @OneToOne(mappedBy = "budget")
+    private Solicitation solicitation;
 
 }
