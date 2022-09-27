@@ -94,6 +94,7 @@ public class BudgetService {
         ResponseSummaryModel res = new ResponseSummaryModel();
         try {
             Budget budget = bRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            budget.getSolicitation().setBudget(null);
             bRepository.delete(budget);
             res.setAll(200, true, "Budget "+budget.getId()+" Deleted", null);
             logger.info(res.getMessage());

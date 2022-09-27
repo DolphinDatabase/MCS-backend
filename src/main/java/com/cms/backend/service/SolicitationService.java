@@ -25,8 +25,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.cms.backend.SummaryModel.ResponseSummaryModel;
 import com.cms.backend.SummaryModel.SolicitationSummaryModel;
 import com.cms.backend.entity.Location;
-import com.cms.backend.entity.Problem;
-import com.cms.backend.entity.Budget;
 import com.cms.backend.entity.Material;
 import com.cms.backend.entity.Solicitation;
 import com.cms.backend.repository.SolicitationRepository;
@@ -74,6 +72,7 @@ public class SolicitationService {
             s.setDescription(solicitation.getDescription());
             s.setStatus(solicitation.getStatus());
             s.setLocation(solicitation.getLocation());
+            s.setBudget(solicitation.getBudget());
             res.setAll(200, true, "Solicitation "+s.getId()+" Updated", toSolicitationSummaryModel(sRepository.save(s)));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
