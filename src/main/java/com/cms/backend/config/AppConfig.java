@@ -8,14 +8,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.cms.backend.entity.Role;
-import com.cms.backend.entity.User;
+import com.cms.backend.entity.Usuario;
 import com.cms.backend.repository.RoleRepository;
 import com.cms.backend.repository.UserRepository;
 
 @Configuration
-public class RoleConfig {
+public class AppConfig {
     
     @Autowired
     RoleRepository repository;
@@ -23,7 +25,9 @@ public class RoleConfig {
     @Autowired
     UserRepository uRepository;
 
-    Logger logger = LoggerFactory.getLogger(RoleConfig.class);
+    Logger logger = LoggerFactory.getLogger(AppConfig.class);
+
+    private PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Bean
     public void setRoles(){
@@ -31,11 +35,11 @@ public class RoleConfig {
         adm.setId(Long.valueOf(1));
         adm.setNivel("ROLE_ADM");
         repository.save(adm);
-        User admUser = new User();
+        Usuario admUser = new Usuario();
         admUser.setId(Long.valueOf(1));
         admUser.setName("ADM");
         admUser.setEmail("adm@email.com");
-        admUser.setPassword("123456");
+        admUser.setPassword(encoder.encode("123456"));
         Set<Role> admRole = new HashSet<>();
         admRole.add(adm);
         admUser.setRoles(admRole);

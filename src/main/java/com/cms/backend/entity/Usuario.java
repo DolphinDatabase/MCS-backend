@@ -22,7 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
+public class Usuario{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,7 @@ public class User {
 
     @Column(name = "usr_nome")
     private String name;
-    
+
     @Column(name = "usr_email")
     private String email;
     

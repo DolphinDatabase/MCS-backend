@@ -66,7 +66,7 @@ public class Solicitation {
 
     @ManyToOne
     @JoinColumn(name = "usr_id", nullable = false)
-    private User user;
+    private Usuario user;
 
     @OneToMany(mappedBy = "solicitation")
     private Set<SolicitationProblem> problems;
