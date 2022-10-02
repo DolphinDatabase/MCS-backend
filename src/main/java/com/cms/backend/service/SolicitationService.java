@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,12 +49,13 @@ public class SolicitationService {
     Logger logger = LoggerFactory.getLogger(SolicitationService.class);
 
     @PostMapping
+    @PreAuthorize("hasRole('CLT')")
     public ResponseEntity<ResponseSummaryModel> createSolicitation(@RequestBody Solicitation solicitation){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
             Solicitation n = sRepository.save(solicitation);
             addLocation(n,n.getLocation());
-            res.setAll(200, true, "New Solicitation created", toSolicitationSummaryModel(n));
+            res.setAll(200, true, "Nova Solicitação criada", toSolicitationSummaryModel(n));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(Exception err){
@@ -64,6 +66,7 @@ public class SolicitationService {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('CLT')")
     public ResponseEntity<ResponseSummaryModel> editSolicitation(@PathVariable Long id, @RequestBody Solicitation solicitation){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -73,11 +76,11 @@ public class SolicitationService {
             s.setStatus(solicitation.getStatus());
             s.setLocation(solicitation.getLocation());
             s.setBudget(solicitation.getBudget());
-            res.setAll(200, true, "Solicitation "+s.getId()+" Updated", toSolicitationSummaryModel(sRepository.save(s)));
+            res.setAll(200, true, "Solicitação "+s.getId()+" atualizada", toSolicitationSummaryModel(sRepository.save(s)));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(ResponseStatusException err){
-            res.setAll(404, false, "Solicitation "+id+" Not Found", null);
+            res.setAll(404, false, "Solicitação "+id+" não encontrada", null);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         }catch(Exception err){
@@ -88,6 +91,7 @@ public class SolicitationService {
     }
 
     @PutMapping("/{id}/addMaterial")
+    @PreAuthorize("hasRole('SUP')")
     public ResponseEntity<ResponseSummaryModel> addMaterial(@RequestBody Material material,@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -100,11 +104,11 @@ public class SolicitationService {
             }
             nMaterials.add(material);
             solicitation.setMaterials(nMaterials);
-            res.setAll(200, true, "Problem "+material.getNum()+" Added to Solicitation "+solicitation.getId(), toSolicitationSummaryModel(sRepository.save(solicitation)));
+            res.setAll(200, true, "Material "+material.getNum()+" adicionado", toSolicitationSummaryModel(sRepository.save(solicitation)));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(ResponseStatusException err){
-            res.setAll(404, false, "Solicitation "+id+" Not Found", null);
+            res.setAll(404, false, "Solicitação "+id+" não encontrada", null);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         }catch(Exception err){
@@ -115,15 +119,16 @@ public class SolicitationService {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseSummaryModel> findSolicitation(@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
             Solicitation solicitation = sRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
-            res.setAll(200, true, "Solicitation "+id+" Found", toSolicitationSummaryModel(solicitation));
+            res.setAll(200, true, "Solicitação "+id+" encontrada", toSolicitationSummaryModel(solicitation));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(ResponseStatusException err){
-            res.setAll(404, false, "Solicitation "+id+" Not Found", null);
+            res.setAll(404, false, "Solicitação "+id+" não encontrada", null);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         }catch(Exception err){
@@ -134,11 +139,12 @@ public class SolicitationService {
     }
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseSummaryModel> listSolicitation(){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
             List<SolicitationSummaryModel> all = sRepository.findAll().stream().map(this::toSolicitationSummaryModel).collect(Collectors.toList());
-            res.setAll(200, true, "List all Solicitations", all);
+            res.setAll(200, true, "Todas as Solicitações listadas", all);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(Exception err){
@@ -149,16 +155,17 @@ public class SolicitationService {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('CLT')")
     public ResponseEntity<ResponseSummaryModel> deleteSolicitation(@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
             Solicitation solicitation = sRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
             sRepository.delete(solicitation);
-            res.setAll(200, true, "Solicitation "+solicitation.getId()+" Deleted", null);
+            res.setAll(200, true, "Solicitação "+solicitation.getId()+" deletada", null);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(ResponseStatusException err){
-            res.setAll(404, false, "Solicitation "+id+" Not Found", null);
+            res.setAll(404, false, "Solicitação "+id+" não encontrada", null);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         }catch(Exception err){

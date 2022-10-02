@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,11 +40,12 @@ public class BudgetService {
     Logger logger = LoggerFactory.getLogger(SolutionService.class);
 
     @GetMapping
+    @PreAuthorize("hasRole('ADM')")
     public ResponseEntity<ResponseSummaryModel> listBudget(){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
             List<BudgetSummaryModel> all = bRepository.findAll().stream().map(this::toBudgetSummaryModel).collect(Collectors.toList());
-            res.setAll(200, true, "List All Budget", all);
+            res.setAll(200, true, "Todos os Orçamentos listados", all);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(Exception err){
@@ -54,10 +56,11 @@ public class BudgetService {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADM')")
     public ResponseEntity<ResponseSummaryModel> createBudget(@RequestBody Budget budget){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
-            res.setAll(200, true, "New Budget Created", toBudgetSummaryModel(bRepository.save(budget)));
+            res.setAll(200, true, "Novo Orçamento criado", toBudgetSummaryModel(bRepository.save(budget)));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(Exception err){
@@ -68,17 +71,18 @@ public class BudgetService {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADM')")
     public ResponseEntity<ResponseSummaryModel> editBudget(@PathVariable Long id, @RequestBody Budget budget){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try {
             Budget b = bRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
             b.setDescription(budget.getDescription());
             b.setTotal(budget.getTotal());
-            res.setAll(200, true, "Budget " +b.getId()+" Updated", toBudgetSummaryModel(bRepository.save(b)));
+            res.setAll(200, true, "Orçamento "+b.getId()+" atualizado", toBudgetSummaryModel(bRepository.save(b)));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(ResponseStatusException err){
-            res.setAll(404, false, "Budget "+id+" Not Found", null);
+            res.setAll(404, false, "Orçamento "+id+" não encontrado", null);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         
@@ -90,17 +94,18 @@ public class BudgetService {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADM')")
     public ResponseEntity<ResponseSummaryModel> deleteBudget(@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try {
             Budget budget = bRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
             budget.getSolicitation().setBudget(null);
             bRepository.delete(budget);
-            res.setAll(200, true, "Budget "+budget.getId()+" Deleted", null);
+            res.setAll(200, true, "Orçamento "+budget.getId()+" deletado", null);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(ResponseStatusException err){
-            res.setAll(404, false, "Budget "+id+" Not Found", null);
+            res.setAll(404, false, "Orçamento "+id+" não encontrado", null);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);        
         } catch (Exception err) {

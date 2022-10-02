@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,11 +40,12 @@ public class MaterialService {
     Logger logger = LoggerFactory.getLogger(MaterialService.class);
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     private ResponseEntity<ResponseSummaryModel> listMaterials(){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
             List<MaterialSummaryModel> all = mRepository.findAll().stream().map(this::toMaterialSummaryModel).collect(Collectors.toList());
-            res.setAll(200, true, "List All Materials", all);
+            res.setAll(200, true, "Todos os materiais listados", all);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }
@@ -55,15 +57,16 @@ public class MaterialService {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseSummaryModel> findMaterial(@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
             Material m = mRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
-            res.setAll(200, true, "Material "+id+" Found", toMaterialSummaryModel(m));
+            res.setAll(200, true, "Material "+id+" encontrado", toMaterialSummaryModel(m));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(ResponseStatusException err){
-            res.setAll(404, false, "Material "+id+" Not Found", null);
+            res.setAll(404, false, "Material "+id+" não encontrado", null);
             logger.error(res.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         }catch(Exception err){
@@ -74,11 +77,12 @@ public class MaterialService {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('SUP')")
     public ResponseEntity<ResponseSummaryModel> createMaterial(@RequestBody Material Material){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
             Material n = mRepository.save(Material);
-            res.setAll(200, true, "New Material Created", toMaterialSummaryModel(n));
+            res.setAll(200, true, "Novo Material criado", toMaterialSummaryModel(n));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(Exception err){
@@ -89,6 +93,7 @@ public class MaterialService {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('SUP')")
     public ResponseEntity<ResponseSummaryModel> updateMaterial(@PathVariable Long id, @RequestBody Material material){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -96,11 +101,11 @@ public class MaterialService {
             m.setModel(material.getModel());
             m.setQuantity(material.getQuantity());
             m.setInventory(material.getInventory());
-            res.setAll(200, true, "Material "+id+" Updated", toMaterialSummaryModel(mRepository.save(m)));
+            res.setAll(200, true, "Material "+id+" atualizado", toMaterialSummaryModel(mRepository.save(m)));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(ResponseStatusException err){
-            res.setAll(404, false, "Material "+id+" Not Found", null);
+            res.setAll(404, false, "Material "+id+" não encontrado", null);
             logger.error(res.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         }catch(Exception err){
@@ -111,6 +116,7 @@ public class MaterialService {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('SUP')")
     public ResponseEntity<ResponseSummaryModel> deleteMaterial(@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -119,11 +125,11 @@ public class MaterialService {
                 s.getMaterials().remove(m);
             });
             mRepository.delete(m);
-            res.setAll(200, true, "Material "+id+" Deleted", null);
+            res.setAll(200, true, "Material "+id+" deletado", null);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(ResponseStatusException err){
-            res.setAll(404, false, "Material "+id+" Not Found", null);
+            res.setAll(404, false, "Material "+id+" não encontrado", null);
             logger.error(res.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         }catch(Exception err){

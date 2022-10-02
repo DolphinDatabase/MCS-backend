@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,10 +36,11 @@ public class SolicitationProblemService {
     Logger logger = LoggerFactory.getLogger(SolicitationService.class);
 
     @PostMapping
+    @PreAuthorize("hasRole('SUP')")
     public ResponseEntity<ResponseSummaryModel> addProblem(@RequestBody SolicitationProblem sp){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
-            res.setAll(200, true, "Problem "+sp.getProblem().getId()+" added to Solicitation"+sp.getSolicitation().getId(), toSolicitationProblemSummaryModel(spRepository.save(sp)));
+            res.setAll(200, true, "SolicitationProblem "+sp.getProblem().getId()+" adicionado", toSolicitationProblemSummaryModel(spRepository.save(sp)));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(Exception err){
@@ -49,6 +51,7 @@ public class SolicitationProblemService {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('SUP')")
     public ResponseEntity<ResponseSummaryModel> updateAddedProblem(@PathVariable Long id,@RequestBody SolicitationProblem solicitationProblem){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -56,7 +59,7 @@ public class SolicitationProblemService {
             sp.setWidth(solicitationProblem.getWidth());
             sp.setHeight(solicitationProblem.getHeight());
             sp.setDepth(solicitationProblem.getDepth());
-            res.setAll(200, true, "SolicitationProblem "+id+" Updated", toSolicitationProblemSummaryModel(spRepository.save(sp)));
+            res.setAll(200, true, "SolicitationProblem "+id+" atualizado", toSolicitationProblemSummaryModel(spRepository.save(sp)));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(ResponseStatusException err){
@@ -71,6 +74,7 @@ public class SolicitationProblemService {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('SUP')")
     public ResponseEntity<ResponseSummaryModel> deleteAddedProblem(@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -78,11 +82,11 @@ public class SolicitationProblemService {
             sp.setProblem(null);
             sp.setSolicitation(null);
             spRepository.delete(sp);
-            res.setAll(200, true, "SolicitationProblem "+id+" Deleted", null);
+            res.setAll(200, true, "SolicitationProblem "+id+" deletado", null);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(ResponseStatusException err){
-            res.setAll(404, false, "SolicitationProblem "+id+" Not Found", null);
+            res.setAll(404, false, "SolicitationProblem "+id+" não encontrado", null);
             logger.error(res.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         }catch(Exception err){
