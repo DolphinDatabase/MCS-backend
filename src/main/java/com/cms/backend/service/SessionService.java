@@ -36,7 +36,6 @@ public class SessionService {
         try{
             Authentication auth = new UsernamePasswordAuthenticationToken(login.getLogin(), login.getPassword());
             auth = authenticationManager.authenticate(auth);
-            System.out.println(auth.getPrincipal().getClass().getName());
             login.setPassword(null);
             login.setToken(JwtUtils.generateToken(auth));
             login.setRole(auth.getAuthorities().iterator().next().getAuthority());

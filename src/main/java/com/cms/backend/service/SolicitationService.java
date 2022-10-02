@@ -1,5 +1,6 @@
 package com.cms.backend.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -143,7 +145,14 @@ public class SolicitationService {
     public ResponseEntity<ResponseSummaryModel> listSolicitation(){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
-            List<SolicitationSummaryModel> all = sRepository.findAll().stream().map(this::toSolicitationSummaryModel).collect(Collectors.toList());
+            Object sessionRole = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString();
+            List<SolicitationSummaryModel> all = new ArrayList<>();
+            if(sessionRole.equals("[ROLE_CLT]")){
+                String sessionEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+                all = sRepository.findAll().stream().filter(chd->chd.getUser().getEmail().equals(sessionEmail)).map(this::toSolicitationSummaryModel).collect(Collectors.toList());
+            }else{
+                all = sRepository.findAll().stream().map(this::toSolicitationSummaryModel).collect(Collectors.toList());
+            }
             res.setAll(200, true, "Todas as Solicitações listadas", all);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
