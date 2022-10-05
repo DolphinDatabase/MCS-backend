@@ -99,6 +99,7 @@ public class MaterialService {
         try{
             Material m = mRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
             m.setModel(material.getModel());
+            m.setDescription(material.getDescription());
             m.setQuantity(material.getQuantity());
             m.setInventory(material.getInventory());
             res.setAll(200, true, "Material "+id+" atualizado", toMaterialSummaryModel(mRepository.save(m)));

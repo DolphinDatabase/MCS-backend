@@ -34,6 +34,9 @@ public class Usuario{
 
     @Column(name = "usr_email")
     private String email;
+
+    @Column(name = "usr_doc")
+    private String document;
     
     @Column(name = "usr_senha")
     private String password;

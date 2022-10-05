@@ -27,11 +27,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.cms.backend.SummaryModel.ResponseSummaryModel;
 import com.cms.backend.SummaryModel.SolicitationSummaryModel;
+import com.cms.backend.SummaryModel.UserSummaryModel;
 import com.cms.backend.entity.Location;
 import com.cms.backend.entity.Material;
 import com.cms.backend.entity.Solicitation;
+import com.cms.backend.entity.Usuario;
 import com.cms.backend.repository.SolicitationRepository;
-
+import com.cms.backend.repository.UserRepository;
 import com.cms.backend.repository.LocationRepository;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -41,6 +43,9 @@ public class SolicitationService {
     
     @Autowired
     private SolicitationRepository sRepository;
+
+    @Autowired
+    private UserRepository uRepository;
 
     @Autowired
     private LocationRepository lRepository;
@@ -55,6 +60,9 @@ public class SolicitationService {
     public ResponseEntity<ResponseSummaryModel> createSolicitation(@RequestBody Solicitation solicitation){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
+            String session = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+            Usuario user = uRepository.findByEmail(session);
+            solicitation.setUser(user);
             Solicitation n = sRepository.save(solicitation);
             addLocation(n,n.getLocation());
             res.setAll(200, true, "Nova Solicitação criada", toSolicitationSummaryModel(n));
@@ -191,6 +199,10 @@ public class SolicitationService {
 
     private SolicitationSummaryModel toSolicitationSummaryModel(Solicitation solicitation){
         return modelMapper.map(solicitation,SolicitationSummaryModel.class);
+    }
+
+    private UserSummaryModel toUserSummaryModel(Usuario user){
+        return modelMapper.map(user,UserSummaryModel.class);
     }
 
 }

@@ -9,7 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MaterialSummaryModel {
     private Long num;
-    private String modelo;
+    private String model;
+    private String description;
     private Long quantity;
     private Long inventory;
 }

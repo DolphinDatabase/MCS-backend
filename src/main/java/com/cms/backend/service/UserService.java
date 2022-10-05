@@ -91,7 +91,7 @@ public class UserService {
                 logger.warn(res.getMessage());
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
             }
-            user.setPassword(encoder.encode(user.getPassword()));
+            user.setPassword(encoder.encode(user.getDocument()));
             res.setAll(200, true, "Novo Usuário criado", toUserSummaryModel(uRepository.save(user)));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
@@ -110,6 +110,7 @@ public class UserService {
             Usuario u = uRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
             u.setName(user.getName());
             u.setEmail(user.getEmail());
+            u.setDocument(user.getDocument());
             u.setPassword(user.getPassword());
             res.setAll(200, true, "Usuário "+id+" atualizado", toUserSummaryModel(uRepository.save(u)));
             logger.info(res.getMessage());

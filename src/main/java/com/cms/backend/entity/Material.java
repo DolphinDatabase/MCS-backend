@@ -26,6 +26,9 @@ public class Material {
     @Column(name = "est_modelo")
     private String model;
 
+    @Column(name = "est_descricao")
+    private String description;
+
     @Column(name = "est_quantidade")
     private Long quantity;
     
