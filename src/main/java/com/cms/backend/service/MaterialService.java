@@ -31,8 +31,8 @@ import com.cms.backend.repository.MaterialRepository;
 @RequestMapping("/material")
 public class MaterialService {
     
-    @Autowired
-    MaterialRepository mRepository;
+    @Autowired 
+    private MaterialRepository materialRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -41,10 +41,10 @@ public class MaterialService {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    private ResponseEntity<ResponseSummaryModel> listMaterials(){
+    public ResponseEntity<ResponseSummaryModel> listMaterials(){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
-            List<MaterialSummaryModel> all = mRepository.findAll().stream().map(this::toMaterialSummaryModel).collect(Collectors.toList());
+            List<MaterialSummaryModel> all = materialRepository.findAll().stream().map(this::toMaterialSummaryModel).collect(Collectors.toList());
             res.setAll(200, true, "Todos os materiais listados", all);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
@@ -61,7 +61,7 @@ public class MaterialService {
     public ResponseEntity<ResponseSummaryModel> findMaterial(@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
-            Material m = mRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+            Material m = materialRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
             res.setAll(200, true, "Material "+id+" encontrado", toMaterialSummaryModel(m));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
@@ -81,7 +81,7 @@ public class MaterialService {
     public ResponseEntity<ResponseSummaryModel> createMaterial(@RequestBody Material Material){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
-            Material n = mRepository.save(Material);
+            Material n = materialRepository.save(Material);
             res.setAll(200, true, "Novo Material criado", toMaterialSummaryModel(n));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
@@ -97,12 +97,12 @@ public class MaterialService {
     public ResponseEntity<ResponseSummaryModel> updateMaterial(@PathVariable Long id, @RequestBody Material material){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
-            Material m = mRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+            Material m = materialRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
             m.setModel(material.getModel());
             m.setDescription(material.getDescription());
             m.setQuantity(material.getQuantity());
             m.setInventory(material.getInventory());
-            res.setAll(200, true, "Material "+id+" atualizado", toMaterialSummaryModel(mRepository.save(m)));
+            res.setAll(200, true, "Material "+id+" atualizado", toMaterialSummaryModel(materialRepository.save(m)));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }catch(ResponseStatusException err){
@@ -121,11 +121,11 @@ public class MaterialService {
     public ResponseEntity<ResponseSummaryModel> deleteMaterial(@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
-            Material m = mRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+            Material m = materialRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
             m.getSolicitations().forEach(s->{
                 s.getMaterials().remove(m);
             });
-            mRepository.delete(m);
+            materialRepository.delete(m);
             res.setAll(200, true, "Material "+id+" deletado", null);
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);

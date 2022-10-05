@@ -27,7 +27,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.cms.backend.SummaryModel.ResponseSummaryModel;
 import com.cms.backend.SummaryModel.SolicitationSummaryModel;
-import com.cms.backend.SummaryModel.UserSummaryModel;
 import com.cms.backend.entity.Location;
 import com.cms.backend.entity.Material;
 import com.cms.backend.entity.Solicitation;
@@ -199,10 +198,6 @@ public class SolicitationService {
 
     private SolicitationSummaryModel toSolicitationSummaryModel(Solicitation solicitation){
         return modelMapper.map(solicitation,SolicitationSummaryModel.class);
-    }
-
-    private UserSummaryModel toUserSummaryModel(Usuario user){
-        return modelMapper.map(user,UserSummaryModel.class);
     }
 
 }
