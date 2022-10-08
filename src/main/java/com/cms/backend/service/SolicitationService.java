@@ -75,7 +75,7 @@ public class SolicitationService {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('CLT')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseSummaryModel> editSolicitation(@PathVariable Long id, @RequestBody Solicitation solicitation){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
