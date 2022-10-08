@@ -77,7 +77,7 @@ public class MaterialService {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseSummaryModel> createMaterial(@RequestBody Material Material){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -93,7 +93,7 @@ public class MaterialService {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseSummaryModel> updateMaterial(@PathVariable Long id, @RequestBody Material material){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -117,7 +117,7 @@ public class MaterialService {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseSummaryModel> deleteMaterial(@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
