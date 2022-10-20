@@ -51,7 +51,7 @@ public class ProblemService {
     Logger logger = LoggerFactory.getLogger(SolutionService.class);
 
     @PostMapping
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseSummaryModel> createProblem(@RequestBody Problem problem){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -104,7 +104,7 @@ public class ProblemService {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseSummaryModel> updateProblem(@PathVariable Long id, @RequestBody Problem problem){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -128,7 +128,7 @@ public class ProblemService {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseSummaryModel> deleteProblem(@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{

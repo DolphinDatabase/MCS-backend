@@ -33,6 +33,7 @@ import com.cms.backend.entity.Solicitation;
 import com.cms.backend.entity.Usuario;
 import com.cms.backend.repository.SolicitationRepository;
 import com.cms.backend.repository.UserRepository;
+import com.cms.backend.util.Status;
 import com.cms.backend.repository.LocationRepository;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -113,6 +114,7 @@ public class SolicitationService {
             }
             nMaterials.add(material);
             solicitation.setMaterials(nMaterials);
+            solicitation.setStatus(Status.IN_PROGRESS);
             res.setAll(200, true, "Material "+material.getNum()+" adicionado", toSolicitationSummaryModel(sRepository.save(solicitation)));
             logger.info(res.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body(res);
