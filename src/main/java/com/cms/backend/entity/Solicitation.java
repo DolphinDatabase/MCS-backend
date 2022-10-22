@@ -52,6 +52,11 @@ public class Solicitation {
     @Column(name = "chd_data")
     private Date date;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "chd_servico")
+    private Date service;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "chd_status")
     private Status status;
@@ -67,6 +72,10 @@ public class Solicitation {
     @ManyToOne
     @JoinColumn(name = "usr_id", nullable = false)
     private Usuario user;
+
+    @ManyToOne
+    @JoinColumn(name = "responsible_id", nullable = true)
+    private Usuario responsible;
 
     @OneToMany(mappedBy = "solicitation")
     private Set<SolicitationProblem> problems;

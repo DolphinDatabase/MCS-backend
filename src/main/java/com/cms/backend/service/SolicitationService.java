@@ -100,6 +100,30 @@ public class SolicitationService {
         }
     }
 
+    @PutMapping("/{id}/addService")
+    @PreAuthorize("hasRole('SUP')")
+    public ResponseEntity<ResponseSummaryModel> addService(@RequestBody Solicitation service,@PathVariable Long id){
+        ResponseSummaryModel res = new ResponseSummaryModel();
+        try{
+            Solicitation solicitation = sRepository.findById(id).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+            Usuario usuario = uRepository.findById(service.getResponsible().getId()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+            solicitation.setService(service.getService());
+            solicitation.setResponsible(usuario);
+            solicitation.setStatus(Status.IN_PROGRESS);
+            res.setAll(200, true, "Solicitação "+solicitation.getId()+" atualizada", toSolicitationSummaryModel(sRepository.save(solicitation)));
+            logger.info(res.getMessage());
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+        }catch(ResponseStatusException err){
+            res.setAll(404, false, "Solicitação ou usuário "+id+" não encontrados", null);
+            logger.info(res.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+        }catch(Exception err){
+            res.setAll(500, false, err.getMessage(), null);
+            logger.error(res.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+        }
+    }
+
     @PutMapping("/{id}/addMaterial")
     @PreAuthorize("hasRole('SUP')")
     public ResponseEntity<ResponseSummaryModel> addMaterial(@RequestBody Material material,@PathVariable Long id){
