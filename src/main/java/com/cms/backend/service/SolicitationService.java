@@ -101,7 +101,7 @@ public class SolicitationService {
     }
 
     @PutMapping("/{id}/addService")
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("hasAnyRole('ADM','SUP')")
     public ResponseEntity<ResponseSummaryModel> addService(@RequestBody Solicitation service,@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
