@@ -24,6 +24,7 @@ public class SolicitationSummaryModel {
     private UserSummaryModel user;
     private UserSummaryModel responsible;
     private Set<SolicitationProblemSummaryModel> problems; 
+    private Set<SolicitationMappingSummaryModel> mappings; 
     private Set<MaterialSummaryModel> materials;
     private BudgetSummaryModel budget; 
 

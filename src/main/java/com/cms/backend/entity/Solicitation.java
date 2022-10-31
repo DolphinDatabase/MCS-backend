@@ -79,6 +79,9 @@ public class Solicitation {
 
     @OneToMany(mappedBy = "solicitation")
     private Set<SolicitationProblem> problems;
+
+    @OneToMany(mappedBy = "solicitation")
+    private Set<SolicitationMapping> mappings;
     
     @ManyToMany
     @JoinTable(name = "Chamado_Estoque",
