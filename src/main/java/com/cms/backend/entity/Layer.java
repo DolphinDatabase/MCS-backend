@@ -35,7 +35,7 @@ public class Layer {
     private String color;
 
     @ManyToOne
-    @JoinColumn(name = "map_id", nullable = true)
+    @JoinColumn(name = "map_id")
     private SolicitationMapping solicitationMapping;
 
 }
