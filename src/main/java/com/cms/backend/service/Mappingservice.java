@@ -1,5 +1,8 @@
 package com.cms.backend.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,6 +38,22 @@ public class Mappingservice {
     private ModelMapper modelMapper;
 
     Logger logger = LoggerFactory.getLogger(SolutionService.class);
+
+    @GetMapping
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ResponseSummaryModel> listMappings(){
+        ResponseSummaryModel res = new ResponseSummaryModel();
+        try{
+            List<MappingSummaryModel> all = mRepository.findAll().stream().map(this::toMappingSummaryModel).collect(Collectors.toList());
+            res.setAll(200, true, "Todos os mapeamentos listados", all);
+            logger.info(res.getMessage());
+            return ResponseEntity.status(HttpStatus.OK).body(res);
+        }catch(Exception err){
+            res.setAll(500, false, err.getMessage(), null);
+            logger.error(res.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
+        }
+    }
 
     @PostMapping
     @PreAuthorize("hasRole('SUP')")
