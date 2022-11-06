@@ -10,8 +10,10 @@ import lombok.Setter;
 public class LayerSummaryModel {
     
     private Long id;
-    private Long x;
-    private Long y;
+    private Double x;
+    private Double y;
     private String color;
+    private Long size;
+    private String type;
 
 }

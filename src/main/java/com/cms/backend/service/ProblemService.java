@@ -30,6 +30,7 @@ import com.cms.backend.entity.Solution;
 import com.cms.backend.repository.ProblemRepository;
 import com.cms.backend.repository.SolicitationProblemRepository;
 import com.cms.backend.repository.SolutionRepository;
+import com.cms.backend.util.Color;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -55,6 +56,7 @@ public class ProblemService {
     public ResponseEntity<ResponseSummaryModel> createProblem(@RequestBody Problem problem){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
+            problem.setColor(Color.randomHex());
             Problem n = pRepository.save(problem);
             addSolutions(n, problem.getSolutions());
             res.setAll(200, true, "Novo Problema criado", toProblemSummaryModel(n));

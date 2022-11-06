@@ -26,13 +26,19 @@ public class Layer {
     private Long id;
 
     @Column(name = "lyr_x")
-    private Long x;
+    private Double x;
 
     @Column(name = "lyr_y")
-    private Long y;
+    private Double y;
 
     @Column(name = "lyr_color")
     private String color;
+    
+    @Column(name = "lyr_tamanho")
+    private Long size;
+
+    @Column(name = "lyr_forma")
+    private String type;
 
     @ManyToOne
     @JoinColumn(name = "map_id")
