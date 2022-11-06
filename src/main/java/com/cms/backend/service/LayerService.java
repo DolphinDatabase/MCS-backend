@@ -36,7 +36,7 @@ public class LayerService {
     Logger logger = LoggerFactory.getLogger(SolutionService.class);
 
     @PostMapping
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("hasAnyRole('ADM','SUP')")
     public ResponseEntity<ResponseSummaryModel> createSolution(@RequestBody Layer layer){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -51,7 +51,7 @@ public class LayerService {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("hasAnyRole('ADM','SUP')")
     public ResponseEntity<ResponseSummaryModel> updateSolution(@PathVariable Long id, @RequestBody Layer layer){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -77,7 +77,7 @@ public class LayerService {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("hasAnyRole('ADM','SUP')")
     public ResponseEntity<ResponseSummaryModel> deleteSolution(@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{

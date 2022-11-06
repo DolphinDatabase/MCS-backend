@@ -44,7 +44,7 @@ public class SolicitationMappingService {
     Logger logger = LoggerFactory.getLogger(SolicitationService.class);
 
     @PostMapping
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("hasAnyRole('ADM','SUP')")
     public ResponseEntity<ResponseSummaryModel> addSolicitationMapping(@RequestBody SolicitationMapping sm){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -59,7 +59,7 @@ public class SolicitationMappingService {
     }
 
     @PutMapping("/{id}/addLayer")
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("hasAnyRole('ADM','SUP')")
     public ResponseEntity<ResponseSummaryModel> addLayer(@PathVariable Long id, @RequestBody Set<Layer> layers){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -87,7 +87,7 @@ public class SolicitationMappingService {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("hasAnyRole('ADM','SUP')")
     public ResponseEntity<ResponseSummaryModel> deleteAddedProblem(@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{

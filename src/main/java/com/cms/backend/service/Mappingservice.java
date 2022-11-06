@@ -56,7 +56,7 @@ public class Mappingservice {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("hasAnyRole('ADM','SUP')")
     public ResponseEntity<ResponseSummaryModel> createSolution(@RequestBody Mapping mapping){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -71,7 +71,7 @@ public class Mappingservice {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("hasAnyRole('ADM','SUP')")
     public ResponseEntity<ResponseSummaryModel> updateSolution(@PathVariable Long id, @RequestBody Mapping mapping){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
@@ -94,7 +94,7 @@ public class Mappingservice {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('SUP')")
+    @PreAuthorize("hasAnyRole('ADM','SUP')")
     public ResponseEntity<ResponseSummaryModel> deleteSolution(@PathVariable Long id){
         ResponseSummaryModel res = new ResponseSummaryModel();
         try{
